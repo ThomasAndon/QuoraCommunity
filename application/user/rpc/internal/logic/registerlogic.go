@@ -24,7 +24,10 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.RegisterResponse, error) {
-	// todo: add your logic here and delete this line
+	// 当注册名字为空的时候，返回业务自定义错误码
+	if len(in.Username) == 0 {
+		return nil, code.RegisterNameEmpty
+	}
 
 	return &service.RegisterResponse{}, nil
 }
