@@ -1,7 +1,10 @@
 package logic
 
 import (
+	"QuoraCommunity/application/user/rpc/internal/code"
+	"QuoraCommunity/application/user/rpc/internal/model"
 	"context"
+	"time"
 
 	"QuoraCommunity/application/user/rpc/internal/svc"
 	"QuoraCommunity/application/user/rpc/service"
@@ -28,6 +31,24 @@ func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.Register
 	if len(in.Username) == 0 {
 		return nil, code.RegisterNameEmpty
 	}
+	ret, err := l.svcCtx.UserModel.Insert(l.ctx, &model.User{
+		Username:   in.Username,
+		Mobile:     in.Mobile,
+		Avatar:     in.Avatar,
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
+	})
+	if err != nil {
+		logx.Errorf("Register req: %v error: %v", in, err)
+		return nil, err
+	}
+	userId, err := ret.LastInsertId()
+	if err != nil {
+		logx.Errorf("LastInsertId error: %v", err)
+		return nil, err
+	}
 
-	return &service.RegisterResponse{}, nil
+	return &service.RegisterResponse{
+		UserId: userId,
+	}, nil
 }

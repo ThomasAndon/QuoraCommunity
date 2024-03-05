@@ -1,7 +1,7 @@
 package code
 
 import (
-	"beyond/pkg/xcode"
+	"QuoraCommunity/pkg/xcode"
 )
 
 var (
